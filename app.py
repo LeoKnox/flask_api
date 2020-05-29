@@ -52,6 +52,9 @@ def db_seed():
                         password='1234')
     
     db.session.add(test_user)
+    db.session.commit()
+    print('Database seeded?')
+    print()
 
 @app.route('/')
 def hello_world():
@@ -77,7 +80,7 @@ def url_variables(name: str, age: int):
     else:
         return jsonify(message= f"Welcome {name}, you are old enough.")
 
-class User(db.Model)
+class User(db.Model):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     first_name = Column(String)
@@ -87,7 +90,7 @@ class User(db.Model)
 
 class Planet(db.Model):
     __tablename__ = 'planets'
-    planet_id = (Integer, primary_key=True)
+    planet_id = Column(Integer, primary_key=True)
     planet_name = Column(String)
     planet_type = Column(String)
     home_star = Column(String)
