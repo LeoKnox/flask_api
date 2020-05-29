@@ -80,6 +80,11 @@ def url_variables(name: str, age: int):
     else:
         return jsonify(message= f"Welcome {name}, you are old enough.")
 
+@app.route('/planets', methods=['GET'])
+def planets():
+    planets_list = Planet.query.all()
+    return jsonify(data=list(planets_list))
+
 class User(db.Model):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
