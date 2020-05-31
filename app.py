@@ -11,11 +11,12 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'planets.db')
 app.config['JWT_SECRET_KEY'] = 'super-secret' # not real key
 app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
-app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
-app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD']
+#app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
+#app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD']
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 jwt = JWTManager(app)
+mail = Mail(app)
 
 @app.cli.command('db_create')
 def db_create():
@@ -123,6 +124,28 @@ def login():
         return jsonify(message="login successful", access_token=access_token)
     else:
         return jsonify(message="Login failed check data and try again."), 401
+
+'''
+@app.route('/retreive_password/<string:email>', methods=['GET'])
+def retrieve_password(email: str):
+    user = User.query.filter_by(email=email)
+    if user:
+        msg = Message("You password is " + user.password, sender="admin@ddd.com",
+            recipients=[email])
+        mail.send(msg)
+        return jsonify(message="pw sent to " + email)
+    else:
+        return jsonify(message="email doesn't exist.")
+'''
+
+@app.route('/planet_details/<int:planet_id>', methods=["GET"])
+def planet_details(planet_id: int):
+    planet = Planet.query.filter_by(planet_id=planet_id).first()
+    if planet:
+        result = planet_schema.dump(planet)
+        return jsonify(result)
+    else:
+        return jsonify(message="Planet does not exist"), 404
 
 class User(db.Model):
     __tablename__ = 'users'
