@@ -162,6 +162,7 @@ def add_planet():
 
         new_planet = Planet(planet_name=planet_name,
                             planet_type=planet_type,
+                            home_star=home_star,
                             mass=mass,
                             radius=radius,
                             distance=distance)
